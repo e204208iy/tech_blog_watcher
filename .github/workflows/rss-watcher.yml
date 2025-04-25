@@ -2,8 +2,8 @@ name: Run Tech Blog Watcher
 
 on:
   schedule:
-    - cron: '0 23 * * *'  # JSTの8:00（UTCの23:00）
-  workflow_dispatch:     # 手動実行も可能
+    - cron: '0 23 * * *'  # JST 8:00
+  workflow_dispatch:
 
 jobs:
   run:
@@ -16,16 +16,14 @@ jobs:
     - name: Set up Rust
       uses: actions-rs/toolchain@v1
       with:
-        rust-version: stable
+        toolchain: stable
+        override: true
 
-    - name: Install dependencies & run
+    - name: Build and Run
       env:
         NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       run: |
         cargo build --release
-        NOTION_TOKEN=$NOTION_TOKEN \
-        NOTION_DB_ID=$NOTION_DB_ID \
-        SLACK_WEBHOOK_URL=$SLACK_WEBHOOK_URL \
         ./target/release/tech_blog_watcher
