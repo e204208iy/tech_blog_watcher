@@ -1,0 +1,31 @@
+name: Run Tech Blog Watcher
+
+on:
+  schedule:
+    - cron: '0 23 * * *'  # JSTの8:00（UTCの23:00）
+  workflow_dispatch:     # 手動実行も可能
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Rust
+      uses: actions/setup-rust@v1
+      with:
+        rust-version: stable
+
+    - name: Install dependencies & run
+      env:
+        NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      run: |
+        cargo build --release
+        NOTION_TOKEN=$NOTION_TOKEN \
+        NOTION_DB_ID=$NOTION_DB_ID \
+        SLACK_WEBHOOK_URL=$SLACK_WEBHOOK_URL \
+        ./target/release/tech_blog_watcher
