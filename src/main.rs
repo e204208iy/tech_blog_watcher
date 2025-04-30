@@ -1,4 +1,4 @@
-mod feeds; // 追加：モジュールとして読み込む
+mod feeds;
 
 use feeds::get_feed_sources;
 
