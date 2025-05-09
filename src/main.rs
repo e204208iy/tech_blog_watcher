@@ -33,7 +33,7 @@ fn main() {
                         let now = Utc::now();
                         let pub_date_utc = pub_date.with_timezone(&Utc);
 
-                        if now - pub_date_utc < Duration::hours(48) {
+                        if now - pub_date_utc < Duration::hours(24) {
                             if notified_urls.insert(url.to_string()) {
                                 send_slack_notification(&slack_webhook, company, title, url);
                             } else {
